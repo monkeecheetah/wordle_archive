@@ -11,7 +11,7 @@ import { InfoModal } from './components/InfoModal'
 import { SettingsModal } from './components/SettingsModal'
 import { EndGameModal } from './components/EndGameModal'
 
-import { Menu, Transition } from '@headlessui/react'
+import { Menu } from '@headlessui/react'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -46,7 +46,9 @@ const getTransportation = (day_) => {
     case 'E60000':
       return 'bybuss';
     case 'EC700C':
-      return 'tbane'    
+      return 'tbane';
+    default:
+      return '';
   }
 }
 
@@ -138,7 +140,7 @@ function App() {
   const [firstTime, setFirstTime] = useLocalStorage('first-time', true)
   const [infoModalIsOpen, setInfoModalIsOpen] = useState(firstTime)
   const [settingsModalIsOpen, setSettingsModalIsOpen] = useState(false)
-  const [transportation, setTransportation] = useState(initialStates.transportation)
+  const [transportation] = useState(initialStates.transportation)
 
   const openModal = () => setIsOpen(true)
   const closeModal = () => setIsOpen(false)
@@ -181,7 +183,7 @@ function App() {
   }, [gameState, currentStreak, longestStreak, setLongestStreak, setCurrentStreak])
 
   useEffect(() => {
-    if (localStorage.getItem('gameStateList') == null) {
+    if (localStorage.getItem('gameStateList') === null) {
       setGameStateList(gameStateList)
     }
   }, [])
@@ -417,23 +419,23 @@ function App() {
   }
 
   var tempGameStateList = JSON.parse(localStorage.getItem('gameStateList'))
-  if (tempGameStateList == null) {
+  if (tempGameStateList === null) {
     setGameStateList(gameStateList)
     tempGameStateList = gameStateList
   }
   for (var i=4;i<=og_day+3;i++) {
     var textNumber = document.getElementById('headlessui-menu-item-'+i)
     if(textNumber != null) {
-      if (tempGameStateList[i-1] == state.won) {
+      if (tempGameStateList[i-1] === state.won) {
         textNumber.classList.add('green-text');
       }
-      if (tempGameStateList[i-1] == state.lost) {
+      if (tempGameStateList[i-1] === state.lost) {
         textNumber.classList.add('red-text');
       }
     }
   }
 
-  var header_symbol = (tempGameStateList[day-1] == 'won') ? ('✔') : ((tempGameStateList[day-1] == 'lost') ? ('✘') : '')
+  var header_symbol = (tempGameStateList[day-1] === 'won') ? ('✔') : ((tempGameStateList[day-1] === 'lost') ? ('✘') : '')
 
   var elements = items_list.map(i => {
     return (
@@ -443,7 +445,7 @@ function App() {
             <a onMouseDown={() => playDay(i)} className=
               {
                 classNames(active ? 'font-bold text-gray-900' : '', 'block px-4 py-2 text-sm '+tempGameStateList[i-1])
-              }>{i+((tempGameStateList[i-1] == state.won) ? ' ✔' : ((tempGameStateList[i-1] == state.lost) ? ' ✘' : ''))}
+              }>{i+((tempGameStateList[i-1] === state.won) ? ' ✔' : ((tempGameStateList[i-1] === state.lost) ? ' ✘' : ''))}
             </a>
           )
         }
@@ -451,7 +453,7 @@ function App() {
     );
   });
 
-  if (darkMode == true) {
+  if (darkMode === true) {
     var html = document.getElementsByTagName( 'html' )[0]; // '0' to assign the first (and only `HTML` tag)
     html.setAttribute( 'class', 'dark-bg' );
   }
