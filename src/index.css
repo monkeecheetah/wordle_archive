@@ -80,3 +80,54 @@ html {
 .lost {
   background-color: #ffc8c2;
 }
+
+.bg-color-wrong {
+  background: #949494;
+}
+.bg-color-half-right {
+  background: #000000;
+}
+.bg-color-green {
+  background: #000000;
+}
+.bg-color-trikk {
+    background: #0B91EF;
+}
+
+.bg-color-bat {
+  background: #682C88;
+}
+
+.bg-color-regionbuss {
+  background: #76A300;
+}
+
+.bg-color-bybuss {
+  background: #E60000;
+}
+
+.bg-color-tbane {
+  background: #EC700C;
+}
+
+.default-btn {
+  border-radius: 2px;
+  transition: all linear 100ms;
+  color: #fff;
+  background: #333941;
+  text-align: center;
+  border: 1px solid transparent;
+}
+
+.default-btn:hover {
+  color: #333941;
+  background: #fff;
+  border: 1px solid currentColor;
+}
+.show {
+  display: unset;
+}
+
+.hide {
+  display: none;
+}

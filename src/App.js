@@ -1,8 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { letters, status } from './constants'
 import { Keyboard } from './components/Keyboard'
-import words from './data/words'
-
+import { dataset } from './data/dataset'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { ReactComponent as Info } from './data/Info.svg'
 import { ReactComponent as Settings } from './data/Settings.svg'
@@ -25,7 +24,30 @@ const state = {
 }
 
 const getDayAnswer = (day_) => {
-  return wordle_answers[day_-1].toUpperCase()
+  let todaysAnswer = wordle_answers[day_-1].route_short_name.toUpperCase();
+  const numEmpty = 4 - todaysAnswer.length;
+  let blank = "";
+  for(let i = 0; i<numEmpty; i++) {
+    blank += " ";
+  }
+  todaysAnswer = `${blank}${todaysAnswer}`; 
+  return todaysAnswer;
+}
+
+const getTransportation = (day_) => {
+  let todaysTransportationColor = wordle_answers[day_-1].route_color;
+  switch(todaysTransportationColor) {
+    case '0B91EF':
+      return 'trikk';
+    case '682C88':
+      return 'bat';
+    case '76A300':
+      return 'regionbuss'
+    case 'E60000':
+      return 'bybuss';
+    case 'EC700C':
+      return 'tbane'    
+  }
 }
 
 // Set the day number of the puzzle to display and show it as the address bar query string
@@ -55,17 +77,17 @@ const getDay = (og_day) => {
   }
 }
 
-const getOGDay = () => {
-  const today = new Date()
-  const date1 = new Date('6/21/21')
-  const diffTime = Math.abs(today - date1)
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-  return diffDays
-}
+// Endre språk på settings
+// Visualisere statistikk
+// Skifte grafikk til å være mer Ruterish
+// Animasjon på reveal. Man tegner opp alle på engang.
+// Se på OG_Dato: Fixed, gjort om til en konstant
+// Prøve å deploye, se på deling
 
-const wordle_answers = ["rebut", "sissy", "humph", "awake", "blush", "focal", "evade", "naval", "serve", "heath", "dwarf", "model", "karma", "stink", "grade", "quiet", "bench", "abate", "feign", "major", "death", "fresh", "crust", "stool", "colon", "abase", "marry", "react", "batty", "pride", "floss", "helix", "croak", "staff", "paper", "unfed", "whelp", "trawl", "outdo", "adobe", "crazy", "sower", "repay", "digit", "crate", "cluck", "spike", "mimic", "pound", "maxim", "linen", "unmet", "flesh", "booby", "forth", "first", "stand", "belly", "ivory", "seedy", "print", "yearn", "drain", "bribe", "stout", "panel", "crass", "flume", "offal", "agree", "error", "swirl", "argue", "bleed", "delta", "flick", "totem", "wooer", "front", "shrub", "parry", "biome", "lapel", "start", "greet", "goner", "golem", "lusty", "loopy", "round", "audit", "lying", "gamma", "labor", "islet", "civic", "forge", "corny", "moult", "basic", "salad", "agate", "spicy", "spray", "essay", "fjord", "spend", "kebab", "guild", "aback", "motor", "alone", "hatch", "hyper", "thumb", "dowry", "ought", "belch", "dutch", "pilot", "tweed", "comet", "jaunt", "enema", "steed", "abyss", "growl", "fling", "dozen", "boozy", "erode", "world", "gouge", "click", "briar", "great", "altar", "pulpy", "blurt", "coast", "duchy", "groin", "fixer", "group", "rogue", "badly", "smart", "pithy", "gaudy", "chill", "heron", "vodka", "finer", "surer", "radio", "rouge", "perch", "retch", "wrote", "clock", "tilde", "store", "prove", "bring", "solve", "cheat", "grime", "exult", "usher", "epoch", "triad", "break", "rhino", "viral", "conic", "masse", "sonic", "vital", "trace", "using", "peach", "champ", "baton", "brake", "pluck", "craze", "gripe", "weary", "picky", "acute", "ferry", "aside", "tapir", "troll", "unify", "rebus", "boost", "truss", "siege", "tiger", "banal", "slump", "crank", "gorge", "query", "drink", "favor", "abbey", "tangy", "panic", "solar", "shire", "proxy", "point", "robot", "prick", "wince", "crimp", "knoll", "sugar", "whack", "mount", "perky", "could", "wrung", "light", "those", "moist", "shard", "pleat", "aloft", "skill", "elder", "frame", "humor", "pause", "ulcer", "ultra", "robin", "cynic", "agora", "aroma", "caulk", "shake", "pupal", "dodge", "swill", "tacit", "other", "thorn", "trove", "bloke", "vivid", "spill", "chant", "choke", "rupee", "nasty", "mourn", "ahead", "brine", "cloth", "hoard", "sweet", "month", "lapse", "watch", "today", "focus", "smelt", "tease", "cater", "movie", "lynch", "saute", "allow", "renew", "their", "slosh", "purge", "chest", "depot", "epoxy", "nymph", "found", "shall", "harry", "stove", "lowly", "snout", "trope", "fewer", "shawl", "natal", "fibre", "comma", "foray", "scare", "stair", "black", "squad", "royal", "chunk", "mince", "slave", "shame", "cheek", "ample", "flair", "foyer", "cargo", "oxide", "plant", "olive", "inert", "askew", "heist", "shown", "zesty", "hasty", "trash", "fella", "larva", "forgo", "story", "hairy", "train", "homer", "badge", "midst", "canny", "fetus", "butch", "farce", "slung", "tipsy", "metal", "yield", "delve", "being", "scour", "glass", "gamer", "scrap", "money", "hinge", "album", "vouch", "asset", "tiara", "crept", "bayou", "atoll", "manor", "creak", "showy", "phase", "froth", "depth", "gloom", "flood", "trait", "girth", "piety", "payer", "goose", "float", "donor", "atone", "primo", "apron", "blown", "cacao", "loser", "input", "gloat", "awful", "brink", "smite", "beady", "rusty", "retro", "droll", "gawky", "hutch", "pinto", "gaily", "egret", "lilac", "sever", "field", "fluff", "hydro", "flack", "agape", "wench", "voice", "stead", "stalk", "berth", "madam", "night", "bland", "liver", "wedge", "augur", "roomy", "wacky", "flock", "angry", "bobby", "trite", "aphid", "tryst", "midge", "power", "elope", "cinch", "motto", "stomp", "upset", "bluff", "cramp", "quart", "coyly", "youth", "rhyme", "buggy", "alien", "smear", "unfit", "patty", "cling", "glean", "label", "hunky", "khaki", "poker", "gruel", "twice", "twang", "shrug", "treat", "unlit", "waste", "merit", "woven", "octal", "needy", "clown", "widow", "irony", "ruder", "gauze", "chief", "onset", "prize", "fungi", "charm", "gully", "inter", "whoop", "taunt", "leery", "class", "theme", "lofty", "tibia", "booze", "alpha", "thyme", "eclat", "doubt", "parer", "chute", "stick", "trice", "alike", "sooth", "recap", "saint", "liege", "glory", "grate", "admit", "brisk", "soggy", "usurp", "scald", "scorn", "leave", "twine", "sting", "bough", "marsh", "sloth", "dandy", "vigor", "howdy", "enjoy"]
+const wordle_answers = dataset;
+
 var day;
-const og_day = getOGDay()
+const og_day = 416 // number of days
 setDay(getDay(og_day));
 var items_list = []
 for (var i=1;i<=og_day;i++) {
@@ -80,14 +102,14 @@ function App() {
     answer: () => getDayAnswer(day),
     gameState: state.playing,
     board: [
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
+      ['', '', '', ''],
     ],
-    cellStatuses: () => Array(6).fill(Array(5).fill(status.unguessed)),
+    cellStatuses: () => Array(6).fill(Array(4).fill(status.unguessed)),
     currentRow: 0,
     currentCol: 0,
     letterStatuses: () => {
@@ -97,11 +119,12 @@ function App() {
       })
       return letterStatuses
     },
+    transportation: () => getTransportation(day),
   }
 
   const [answer, setAnswer] = useState(initialStates.answer)
   const [gameState, setGameState] = useState(initialStates.gameState)
-  const [gameStateList, setGameStateList] = useLocalStorage('gameStateList', Array(500).fill(initialStates.gameState))
+  const [gameStateList, setGameStateList] = useLocalStorage('gameStateList', Array(416).fill(initialStates.gameState))
   const [board, setBoard] = useState(initialStates.board)
   const [cellStatuses, setCellStatuses] = useState(initialStates.cellStatuses)
   const [currentRow, setCurrentRow] = useState(initialStates.currentRow)
@@ -115,6 +138,7 @@ function App() {
   const [firstTime, setFirstTime] = useLocalStorage('first-time', true)
   const [infoModalIsOpen, setInfoModalIsOpen] = useState(firstTime)
   const [settingsModalIsOpen, setSettingsModalIsOpen] = useState(false)
+  const [transportation, setTransportation] = useState(initialStates.transportation)
 
   const openModal = () => setIsOpen(true)
   const closeModal = () => setIsOpen(false)
@@ -187,17 +211,38 @@ function App() {
           return 'nm-inset-orange-500 text-gray-50'
         }
         else {
-          return 'nm-inset-n-green text-gray-50'
+          let bgcolor = '';
+          switch(dataset[day - 1].route_color) {
+            case '0B91EF':
+              bgcolor = 'bg-color-trikk';
+              break;
+            case '682C88':
+              bgcolor = 'bg-color-bat';
+              break;
+            case '76A300':
+              bgcolor = 'bg-color-regionbuss';
+              break;
+            case 'E60000':
+              bgcolor = 'bg-color-bybuss';
+              break;
+            case 'EC700C':
+              bgcolor = 'bg-color-tbane';
+              break;
+            default:
+              bgcolor = 'bg-color-green';
+              break; 
+          }
+          return `${bgcolor} text-gray-50`;
         }
       case status.yellow:
       if (colorBlindMode) {
         return 'nm-inset-blue-300 text-gray-50'
       }
       else {
-        return 'nm-inset-yellow-500 text-gray-50'
+        return 'bg-color-half-right text-gray-50'
       }
       case status.gray:
-        return 'nm-inset-n-gray text-gray-50'
+        return 'bg-color-wrong text-gray-50'
       default:
         return 'nm-flat-background dark:nm-flat-background-dark text-primary dark:text-primary-dark'
     }
@@ -207,21 +252,21 @@ function App() {
     document.activeElement.blur()
     setSubmittedInvalidWord(false)
     setBoard((prev) => {
-      if (currentCol > 4) {
+      if (currentCol > 3) {
         return prev
       }
       const newBoard = [...prev]
       newBoard[currentRow][currentCol] = letter
       return newBoard
     })
-    if (currentCol < 5) {
+    if (currentCol < 4) {
       setCurrentCol((prev) => prev + 1)
     }
   }
 
   const isValidWord = (word) => {
-    if (word.length < 5) return false
-    return words[word.toLowerCase()]
+    if (word.length < 4) return false
+    return true;
   }
 
   const onEnterPress = () => {
@@ -257,27 +302,19 @@ function App() {
       const newCellStatuses = [...prev]
       newCellStatuses[rowNumber] = [...prev[rowNumber]]
       const wordLength = word.length
-      const answerLetters = answer.split('')
+      const answerLetters = Array.from(answer)
 
-      // set all to gray
       for (let i = 0; i < wordLength; i++) {
-        newCellStatuses[rowNumber][i] = status.gray
-      }
-
-      // check greens
-      for (let i = wordLength - 1; i >= 0; i--) {
-        if (word[i] === answer[i]) {
-          newCellStatuses[rowNumber][i] = status.green
-          answerLetters.splice(i, 1)
-        }
-      }
-
-      // check yellows
-      for (let i = 0; i < wordLength; i++) {
-        if (answerLetters.includes(word[i]) && newCellStatuses[rowNumber][i] !== status.green) {
-          newCellStatuses[rowNumber][i] = status.yellow
-          answerLetters.splice(answerLetters.indexOf(word[i]), 1)
-        }
+          if(word[i] === answer[i]) {
+            
+            newCellStatuses[rowNumber][i] = status.green
+            answerLetters.splice(i, 1)          
+          } else if (answerLetters.includes(word[i]) && newCellStatuses[rowNumber][i] !== status.green) {
+            newCellStatuses[rowNumber][i] = status.yellow
+            answerLetters.splice(answerLetters.indexOf(word[i]), 1)
+          } else {
+            newCellStatuses[rowNumber][i] = status.gray
+          }
       }
 
       return newCellStatuses
@@ -405,7 +442,7 @@ function App() {
           (
             <a onMouseDown={() => playDay(i)} className=
               {
-                classNames(active ? 'font-bold text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm '+tempGameStateList[i-1])
+                classNames(active ? 'font-bold text-gray-900' : '', 'block px-4 py-2 text-sm '+tempGameStateList[i-1])
               }>{i+((tempGameStateList[i-1] == state.won) ? ' ✔' : ((tempGameStateList[i-1] == state.lost) ? ' ✘' : ''))}
             </a>
           )
@@ -432,7 +469,7 @@ function App() {
               <Settings />
             </button>
             <h1 className={"flex-1 text-center text-l xxs:text-lg sm:text-3xl tracking-wide font-bold font-og"}>
-              WORDLE ARCHIVE {day} {header_symbol}
+              Wordler - Ruter Edition ({day}) {header_symbol}
             </h1>
             <button className="mr-2" type="button" onClick={() => setIsOpen(true)}>
               <Share />
@@ -445,22 +482,22 @@ function App() {
             <div className="flex items-center px-2">
               <button
                 type="button"
-                className="rounded px-2 py-2 mt-2 w-24 text-sm nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
-                onClick={playPrevious}>Previous
+                className="rounded default-btn px-2 py-2 mt-2 w-24 text-sm nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
+                onClick={playPrevious}>Forrige
               </button>
             </div>
             <div className="flex items-center px-2">
               <button
                 type="button"
-                className="rounded px-2 py-2 mt-2 w-24 text-sm nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
-                onClick={playRandom}>Random
+                className="rounded default-btn px-2 py-2 mt-2 w-24 text-sm nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
+                onClick={playRandom}>Tilfeldig
               </button>
             </div>
             <div className="flex items-center px-2">
               <button
                 type="button"
-                className="rounded px-2 py-2 mt-2 w-24 text-sm nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
-                onClick={playNext}>Next
+                className="rounded default-btn px-2 py-2 mt-2 w-24 text-sm nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
+                onClick={playNext}>Neste
               </button>
             </div>
           </div>
@@ -468,18 +505,18 @@ function App() {
             <div className="flex items-center px-2">
               <button
                 type="button"
-                className="rounded px-2 py-2 w-24 text-sm nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
-                onClick={playFirst}>First
+                className="rounded default-btn px-2 py-2 w-24 text-sm nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
+                onClick={playFirst}>Første
               </button>
             </div>
             <div className="flex items-center px-2">
               <Menu as="div" className="relative inline-block text-left">
                 <div>
-                  <Menu.Button className="blurthis rounded px-2 py-2 w-24 text-sm nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark">
-                    Choose
+                  <Menu.Button className="blurthis default-btn rounded px-2 py-2 w-24 text-sm nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark">
+                    Velg
                   </Menu.Button>
                 </div>
-                  <Menu.Items className="origin-top-right absolute right-0 mt-2 w-42 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-scroll h-56">
+                  <Menu.Items className="origin-top-right default-btn absolute right-0 mt-2 w-42 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-scroll h-56">
                     <div className="py-1">
                       {elements}
                     </div>
@@ -489,13 +526,13 @@ function App() {
             <div className="flex items-center px-2">
               <button
                 type="button"
-                className="rounded px-2 py-2 w-24 text-sm nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
-                onClick={playLast}>Last
+                className="rounded default-btn px-2 py-2 w-24 text-sm nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
+                onClick={playLast}>Siste
               </button>
             </div>
           </div>
           <div className="flex items-center flex-col py-4">
-            <div className="grid grid-cols-5 grid-flow-row gap-4">
+            <div className="grid grid-cols-4 grid-flow-row gap-4">
               {board.map((row, rowNumber) =>
                 row.map((letter, colNumber) => (
                   <span
@@ -553,6 +590,7 @@ function App() {
             onDeletePress={onDeletePress}
             gameDisabled={gameState !== state.playing}
             colorBlindMode={colorBlindMode}
+            transportation={transportation}
           />
         </div>
       </div>
@@ -567,7 +605,7 @@ function App() {
               <Settings />
             </button>
             <h1 className={"flex-1 text-center text-xl xxs:text-2xl -mr-6 sm:text-4xl tracking-wide font-bold font-og"}>
-              WORDLE ARCHIVE {day}  {header_symbol}
+              Wordler - Ruter Edition ({day})   {header_symbol}
             </h1>
             <button className="mr-6" type="button" onClick={() => setIsOpen(true)}>
               <Share />
@@ -580,22 +618,22 @@ function App() {
             <div className="flex items-center px-3">
               <button
                 type="button"
-                className="rounded px-3 py-2 mt-4 w-32 text-lg nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
-                onClick={playFirst}>First
+                className="rounded default-btn default-btn px-3 py-2 mt-4 w-32 text-lg nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
+                onClick={playFirst}>Første
               </button>
             </div>
             <div className="flex items-center px-3">
               <button
                 type="button"
-                className="rounded px-3 py-2 mt-4 w-32 text-lg nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
-                onClick={playPrevious}>Previous
+                className="rounded default-btn px-3 py-2 mt-4 w-32 text-lg nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
+                onClick={playPrevious}>Forrige
               </button>
             </div>
             <div className="flex items-center px-3">
               <Menu as="div" className="relative inline-block text-left">
                 <div>
-                  <Menu.Button className="blurthis rounded px-3 py-2 mt-4 w-32 text-lg nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark">
-                    Choose
+                  <Menu.Button className="blurthis default-btn rounded px-3 py-2 mt-4 w-32 text-lg nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark">
+                    Velg
                   </Menu.Button>
                 </div>
                   <Menu.Items className="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-scroll h-56">
@@ -606,7 +644,7 @@ function App() {
                             <a onMouseDown={() => playRandom()} className=
                               {
                                 classNames(active ? 'font-bold text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')
-                              }>Random
+                              }>Tilfeldig
                             </a>
                           )
                         }
@@ -619,15 +657,15 @@ function App() {
             <div className="flex items-center px-3">
               <button
                 type="button"
-                className="rounded px-3 py-2 mt-4 w-32 text-lg nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
-                onClick={playNext}>Next
+                className="rounded default-btn px-3 py-2 mt-4 w-32 text-lg nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
+                onClick={playNext}>Neste
               </button>
             </div>
             <div className="flex items-center px-3">
               <button
                 type="button"
-                className="rounded px-3 py-2 mt-4 w-32 text-lg nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
-                onClick={playLast}>Last
+                className="rounded default-btn px-3 py-2 mt-4 w-32 text-lg nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
+                onClick={playLast}>Forrige
               </button>
             </div>
           </div>

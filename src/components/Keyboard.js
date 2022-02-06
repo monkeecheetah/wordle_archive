@@ -1,25 +1,49 @@
 import { keyboardLetters, status, letters } from '../constants'
 import { useEffect, useCallback } from 'react'
 
-const Keyboard = ({ letterStatuses, addLetter, onEnterPress, onDeletePress, gameDisabled, colorBlindMode }) => {
+const Keyboard = ({ letterStatuses, addLetter, onEnterPress, onSpacePress, onDeletePress, gameDisabled, colorBlindMode, transportation }) => {
+  console.log(letterStatuses)
   const getKeyStyle = (letter) => {
+    console.log(letter, ' letter')
+
     switch (letterStatuses[letter]) {
       case status.green:
         if (colorBlindMode) {
           return 'bg-orange-500 text-gray-50'
         }
         else {
-          return 'bg-n-green text-gray-50'
+          let bgcolor = '';
+          switch (transportation) {
+            case 'trikk':
+              bgcolor = 'bg-color-trikk';
+              break;
+            case 'bat':
+              bgcolor = 'bg-color-bat';
+              break;
+            case 'regionbuss':
+              bgcolor = 'bg-color-regionbuss';
+              break;
+            case 'bybuss':
+              bgcolor = 'bg-color-bybuss';
+              break;
+            case 'tbane':
+              bgcolor = 'bg-color-tbane';
+              break;
+            default:
+              bgcolor = 'bg-color-green';
+              break;
+          }
+          return `${bgcolor} text-gray-50`;
         }
       case status.yellow:
         if (colorBlindMode) {
           return 'bg-blue-300 text-gray-50'
         }
         else {
-          return 'bg-yellow-500 text-gray-50'
+          return 'bg-color-half-right text-gray-50'
         }
       case status.gray:
-        return 'bg-n-gray dark:bg-gray-700 text-gray-50'
+        return 'bg-color-wrong text-gray-50'
       default:
         return 'dark:bg-n-gray text-primary dark:text-primary-dark'
     }
@@ -39,7 +63,6 @@ const Keyboard = ({ letterStatuses, addLetter, onEnterPress, onDeletePress, game
       if (gameDisabled) return
 
       const letter = event.key.toUpperCase()
-
       if (letters.includes(letter)) {
         addLetter(letter)
       } else if (letter === 'ENTER') {
@@ -47,6 +70,9 @@ const Keyboard = ({ letterStatuses, addLetter, onEnterPress, onDeletePress, game
         event.preventDefault()
       } else if (letter === 'BACKSPACE') {
         onDeletePress()
+      } else if (event.keyCode === 32 || letter === "SPACE_BAR") {
+        console.log("add letter ' '")
+        addLetter(" ")
       }
     },
     [addLetter, onEnterPress, onDeletePress, gameDisabled]
@@ -62,7 +88,7 @@ const Keyboard = ({ letterStatuses, addLetter, onEnterPress, onDeletePress, game
     <div className="w-full flex flex-col items-center mb-3 select-none">
       {keyboardLetters.map((row, idx) => (
         <div key={idx} className="w-full flex justify-center my-[5px]">
-          {idx === 2 && (
+          {idx === 3 && (
             <button
               onClick={onEnterPress}
               className="h-10 xxs:h-14 w-12 px-1 text-xs font-medium mx-[3.5px] rounded nm-flat-background-sm dark:nm-flat-background-dark-sm text-primary dark:text-primary-dark"
@@ -85,7 +111,28 @@ const Keyboard = ({ letterStatuses, addLetter, onEnterPress, onDeletePress, game
               </div>
             </button>
           ))}
-          {idx === 2 && (
+          {idx === 3 && (
+            <button
+              onClick={() => onKeyButtonPress("SPACE_BAR")}
+              className={`h-10 xxs:h-14 w-12 flex items-center justify-center ${getKeyStyle(" ")} nm-flat-background-sm dark:nm-flat-background-dark-sm rounded`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="currentcolor"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M18 9v4H6V9H4v6h16V9z"
+                />
+              </svg>
+            </button>
+          )}
+          {idx === 3 && (
             <button
               onClick={onDeletePress}
               className="h-10 xxs:h-14 w-12 flex items-center justify-center nm-flat-background-sm dark:nm-flat-background-dark-sm text-primary dark:text-primary-dark mx-[3.5px] text-sm  rounded"
