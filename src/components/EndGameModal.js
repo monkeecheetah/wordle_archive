@@ -17,6 +17,7 @@ export const EndGameModal = ({
   currentStreak,
   longestStreak,
   answer,
+  answerRoute,
   playAgain,
   day,
   currentRow,
@@ -30,7 +31,7 @@ export const EndGameModal = ({
           className="rounded px-6 py-2 mt-8 text-lg nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
           onClick={playAgain}
         >
-          Close
+          Lukk
         </button>
       </div>
     )
@@ -115,7 +116,10 @@ export const EndGameModal = ({
           {gameState === state.won && (
             <>
               <img src={Success} alt="success" height="auto" width="auto" />
-              <h1 className=" text-3xl">Congrats!</h1>
+              <h1 className=" text-3xl">Hurra!</h1>
+              <p className="mt-3 text-2xl">
+                  Ruten var: <strong>{answer} - {answerRoute}</strong>
+              </p>
               <p className="mt-3 text-2xl">
                 Won: {wins}
               </p>
@@ -130,7 +134,7 @@ export const EndGameModal = ({
               <div className="text-primary dark:text-primary-dark text-4xl text-center">
                 <p>Oops!</p>
                 <p className="mt-3 text-2xl">
-                  The word was <strong>{answer}</strong>
+                  Ruten var: <br /><strong>{answer} - <br />{answerRoute}</strong>
                 </p>
                 <p className="mt-3 text-2xl">
                   Won: {wins}

@@ -2,9 +2,7 @@ import { keyboardLetters, status, letters } from '../constants'
 import { useEffect, useCallback } from 'react'
 
 const Keyboard = ({ letterStatuses, addLetter, onEnterPress, onSpacePress, onDeletePress, gameDisabled, colorBlindMode, transportation }) => {
-  console.log(letterStatuses)
   const getKeyStyle = (letter) => {
-    console.log(letter, ' letter')
 
     switch (letterStatuses[letter]) {
       case status.green:
@@ -71,7 +69,6 @@ const Keyboard = ({ letterStatuses, addLetter, onEnterPress, onSpacePress, onDel
       } else if (letter === 'BACKSPACE') {
         onDeletePress()
       } else if (event.keyCode === 32 || letter === "SPACE_BAR") {
-        console.log("add letter ' '")
         addLetter(" ")
       }
     },

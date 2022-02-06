@@ -24,19 +24,24 @@ const state = {
 }
 
 const getDayAnswer = (day_) => {
-  let todaysAnswer = wordle_answers[day_-1].route_short_name.toUpperCase();
+  let todaysAnswer = wordle_answers[day_ - 1].route_short_name.toUpperCase();
   const numEmpty = 4 - todaysAnswer.length;
   let blank = "";
-  for(let i = 0; i<numEmpty; i++) {
+  for (let i = 0; i < numEmpty; i++) {
     blank += " ";
   }
-  todaysAnswer = `${blank}${todaysAnswer}`; 
+  todaysAnswer = `${blank}${todaysAnswer}`;
   return todaysAnswer;
 }
 
+const getAnswerRoute = (day_) => {
+  let routename = wordle_answers[day_ - 1].route_long_name;
+  return routename;
+}
+
 const getTransportation = (day_) => {
-  let todaysTransportationColor = wordle_answers[day_-1].route_color;
-  switch(todaysTransportationColor) {
+  let todaysTransportationColor = wordle_answers[day_ - 1].route_color;
+  switch (todaysTransportationColor) {
     case '0B91EF':
       return 'trikk';
     case '682C88':
@@ -79,7 +84,6 @@ const getDay = (og_day) => {
   }
 }
 
-// Endre språk på settings
 // Visualisere statistikk
 // Skifte grafikk til å være mer Ruterish
 // Animasjon på reveal. Man tegner opp alle på engang.
@@ -92,7 +96,7 @@ var day;
 const og_day = 416 // number of days
 setDay(getDay(og_day));
 var items_list = []
-for (var i=1;i<=og_day;i++) {
+for (var i = 1; i <= og_day; i++) {
   items_list.push(i)
 }
 
@@ -101,6 +105,7 @@ function App() {
   const reloadCount = Number(sessionStorage.getItem('reloadCount')) || 0;
 
   const initialStates = {
+    answerRoute: () => getAnswerRoute(day),
     answer: () => getDayAnswer(day),
     gameState: state.playing,
     board: [
@@ -125,6 +130,7 @@ function App() {
   }
 
   const [answer, setAnswer] = useState(initialStates.answer)
+  const [answerRoute, setAnswerRoute] = useState(initialStates.answerRoute)
   const [gameState, setGameState] = useState(initialStates.gameState)
   const [gameStateList, setGameStateList] = useLocalStorage('gameStateList', Array(416).fill(initialStates.gameState))
   const [board, setBoard] = useState(initialStates.board)
@@ -140,7 +146,7 @@ function App() {
   const [firstTime, setFirstTime] = useLocalStorage('first-time', true)
   const [infoModalIsOpen, setInfoModalIsOpen] = useState(firstTime)
   const [settingsModalIsOpen, setSettingsModalIsOpen] = useState(false)
-  const [transportation] = useState(initialStates.transportation)
+  const [transportation, setTransportation] = useState(initialStates.transportation)
 
   const openModal = () => setIsOpen(true)
   const closeModal = () => setIsOpen(false)
@@ -200,9 +206,8 @@ function App() {
   const getCellStyles = (rowNumber, colNumber, letter) => {
     if (rowNumber === currentRow) {
       if (letter) {
-        return `nm-inset-background dark:nm-inset-background-dark text-primary dark:text-primary-dark ${
-          submittedInvalidWord ? 'border border-red-800' : ''
-        }`
+        return `nm-inset-background dark:nm-inset-background-dark text-primary dark:text-primary-dark ${submittedInvalidWord ? 'border border-red-800' : ''
+          }`
       }
       return 'nm-flat-background dark:nm-flat-background-dark text-primary dark:text-primary-dark'
     }
@@ -214,7 +219,7 @@ function App() {
         }
         else {
           let bgcolor = '';
-          switch(dataset[day - 1].route_color) {
+          switch (dataset[day - 1].route_color) {
             case '0B91EF':
               bgcolor = 'bg-color-trikk';
               break;
@@ -232,17 +237,17 @@ function App() {
               break;
             default:
               bgcolor = 'bg-color-green';
-              break; 
+              break;
           }
           return `${bgcolor} text-gray-50`;
         }
       case status.yellow:
-      if (colorBlindMode) {
-        return 'nm-inset-blue-300 text-gray-50'
-      }
-      else {
-        return 'bg-color-half-right text-gray-50'
-      }
+        if (colorBlindMode) {
+          return 'nm-inset-blue-300 text-gray-50'
+        }
+        else {
+          return 'bg-color-half-right text-gray-50'
+        }
       case status.gray:
         return 'bg-color-wrong text-gray-50'
       default:
@@ -307,16 +312,16 @@ function App() {
       const answerLetters = Array.from(answer)
 
       for (let i = 0; i < wordLength; i++) {
-          if(word[i] === answer[i]) {
-            
-            newCellStatuses[rowNumber][i] = status.green
-            answerLetters.splice(i, 1)          
-          } else if (answerLetters.includes(word[i]) && newCellStatuses[rowNumber][i] !== status.green) {
-            newCellStatuses[rowNumber][i] = status.yellow
-            answerLetters.splice(answerLetters.indexOf(word[i]), 1)
-          } else {
-            newCellStatuses[rowNumber][i] = status.gray
-          }
+        if (word[i] === answer[i]) {
+
+          newCellStatuses[rowNumber][i] = status.green
+          answerLetters.splice(i, 1)
+        } else if (answerLetters.includes(word[i]) && newCellStatuses[rowNumber][i] !== status.green) {
+          newCellStatuses[rowNumber][i] = status.yellow
+          answerLetters.splice(answerLetters.indexOf(word[i]), 1)
+        } else {
+          newCellStatuses[rowNumber][i] = status.gray
+        }
       }
 
       return newCellStatuses
@@ -338,12 +343,12 @@ function App() {
     if (lastFilledRow && isRowAllGreen(lastFilledRow)) {
       setGameState(state.won)
       var newGameStateList = JSON.parse(localStorage.getItem('gameStateList'))
-      newGameStateList[day-1] = state.won
+      newGameStateList[day - 1] = state.won
       localStorage.setItem('gameStateList', JSON.stringify(newGameStateList))
     } else if (currentRow === 6) {
       setGameState(state.lost)
       var newGameStateList = JSON.parse(localStorage.getItem('gameStateList'))
-      newGameStateList[day-1] = state.lost
+      newGameStateList[day - 1] = state.lost
       localStorage.setItem('gameStateList', JSON.stringify(newGameStateList))
     }
   }, [cellStatuses, currentRow])
@@ -385,11 +390,10 @@ function App() {
       height: 'calc(100% - 2rem)',
       width: 'calc(100% - 2rem)',
       backgroundColor: darkMode ? 'hsl(231, 16%, 25%)' : 'hsl(231, 16%, 92%)',
-      boxShadow: `${
-        darkMode
+      boxShadow: `${darkMode
           ? '0.2em 0.2em calc(0.2em * 2) #252834, calc(0.2em * -1) calc(0.2em * -1) calc(0.2em * 2) #43475C'
           : '0.2em 0.2em calc(0.2em * 2) #A3A7BD, calc(0.2em * -1) calc(0.2em * -1) calc(0.2em * 2) #FFFFFF'
-      }`,
+        }`,
       border: 'none',
       borderRadius: '1rem',
       maxWidth: '475px',
@@ -400,6 +404,8 @@ function App() {
 
   const play = () => {
     setAnswer(initialStates.answer)
+    setAnswerRoute(initialStates.answerRoute)
+    setTransportation(initialStates.transportation)
     setGameState(initialStates.gameState)
     setBoard(initialStates.board)
     setCellStatuses(initialStates.cellStatuses)
@@ -409,7 +415,7 @@ function App() {
   }
   const playFirst = () => playDay(1)
   const playPrevious = () => playDay(day - 1)
-  const playRandom = () => playDay(Math.floor(Math.random() * (og_day-1)) + 1)
+  const playRandom = () => playDay(Math.floor(Math.random() * (og_day - 1)) + 1)
   const playNext = () => playDay(day + 1)
   const playLast = () => playDay(og_day)
 
@@ -423,43 +429,43 @@ function App() {
     setGameStateList(gameStateList)
     tempGameStateList = gameStateList
   }
-  for (var i=4;i<=og_day+3;i++) {
-    var textNumber = document.getElementById('headlessui-menu-item-'+i)
-    if(textNumber != null) {
-      if (tempGameStateList[i-1] === state.won) {
+  for (var i = 4; i <= og_day + 3; i++) {
+    var textNumber = document.getElementById('headlessui-menu-item-' + i)
+    if (textNumber != null) {
+      if (tempGameStateList[i - 1] === state.won) {
         textNumber.classList.add('green-text');
       }
-      if (tempGameStateList[i-1] === state.lost) {
+      if (tempGameStateList[i - 1] === state.lost) {
         textNumber.classList.add('red-text');
       }
     }
   }
 
-  var header_symbol = (tempGameStateList[day-1] === 'won') ? ('✔') : ((tempGameStateList[day-1] === 'lost') ? ('✘') : '')
+  var header_symbol = (tempGameStateList[day - 1] === 'won') ? ('✔') : ((tempGameStateList[day - 1] === 'lost') ? ('✘') : '')
 
   var elements = items_list.map(i => {
     return (
       <Menu.Item key={i}>
         {({ active }) =>
-          (
-            <a onMouseDown={() => playDay(i)} className=
-              {
-                classNames(active ? 'font-bold text-gray-900' : '', 'block px-4 py-2 text-sm '+tempGameStateList[i-1])
-              }>{i+((tempGameStateList[i-1] === state.won) ? ' ✔' : ((tempGameStateList[i-1] === state.lost) ? ' ✘' : ''))}
-            </a>
-          )
+        (
+          <a onMouseDown={() => playDay(i)} className=
+            {
+              classNames(active ? 'font-bold text-gray-900' : '', 'block px-4 py-2 text-sm ' + tempGameStateList[i - 1])
+            }>{i + ((tempGameStateList[i - 1] === state.won) ? ' ✔' : ((tempGameStateList[i - 1] === state.lost) ? ' ✘' : ''))}
+          </a>
+        )
         }
       </Menu.Item>
     );
   });
 
   if (darkMode === true) {
-    var html = document.getElementsByTagName( 'html' )[0]; // '0' to assign the first (and only `HTML` tag)
-    html.setAttribute( 'class', 'dark-bg' );
+    var html = document.getElementsByTagName('html')[0]; // '0' to assign the first (and only `HTML` tag)
+    html.setAttribute('class', 'dark-bg');
   }
   else {
-    var html = document.getElementsByTagName( 'html' )[0]; // '0' to assign the first (and only `HTML` tag)
-    html.setAttribute( 'class', 'bg' );
+    var html = document.getElementsByTagName('html')[0]; // '0' to assign the first (and only `HTML` tag)
+    html.setAttribute('class', 'bg');
   }
 
   if (window.innerWidth < 600) {
@@ -503,7 +509,7 @@ function App() {
               </button>
             </div>
           </div>
-           <div className="flex flex-force-center items-center py-3">
+          <div className="flex flex-force-center items-center py-3">
             <div className="flex items-center px-2">
               <button
                 type="button"
@@ -518,11 +524,11 @@ function App() {
                     Velg
                   </Menu.Button>
                 </div>
-                  <Menu.Items className="origin-top-right default-btn absolute right-0 mt-2 w-42 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-scroll h-56">
-                    <div className="py-1">
-                      {elements}
-                    </div>
-                  </Menu.Items>
+                <Menu.Items className="origin-top-right default-btn absolute right-0 mt-2 w-42 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-scroll h-56">
+                  <div className="py-1">
+                    {elements}
+                  </div>
+                </Menu.Items>
               </Menu>
             </div>
             <div className="flex items-center px-2">
@@ -568,6 +574,7 @@ function App() {
             currentStreak={currentStreak}
             longestStreak={longestStreak}
             answer={answer}
+            answerRoute={answerRoute}
             playAgain={() => {
               closeModal()
               streakUpdated.current = false
@@ -638,22 +645,22 @@ function App() {
                     Velg
                   </Menu.Button>
                 </div>
-                  <Menu.Items className="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-scroll h-56">
-                    <div className="py-1">
-                      <Menu.Item key={i}>
-                        {({ active }) =>
-                          (
-                            <a onMouseDown={() => playRandom()} className=
-                              {
-                                classNames(active ? 'font-bold text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')
-                              }>Tilfeldig
-                            </a>
-                          )
-                        }
-                      </Menu.Item>
-                      {elements}
-                    </div>
-                  </Menu.Items>
+                <Menu.Items className="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-scroll h-56">
+                  <div className="py-1">
+                    <Menu.Item key={i}>
+                      {({ active }) =>
+                      (
+                        <a onMouseDown={() => playRandom()} className=
+                          {
+                            classNames(active ? 'font-bold text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')
+                          }>Tilfeldig
+                        </a>
+                      )
+                      }
+                    </Menu.Item>
+                    {elements}
+                  </div>
+                </Menu.Items>
               </Menu>
             </div>
             <div className="flex items-center px-3">
@@ -706,6 +713,7 @@ function App() {
             currentStreak={currentStreak}
             longestStreak={longestStreak}
             answer={answer}
+            answerRoute={answerRoute}
             playAgain={() => {
               closeModal()
               streakUpdated.current = false

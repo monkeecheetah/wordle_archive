@@ -21,7 +21,7 @@ export const InfoModal = ({ isOpen, handleClose, darkMode, colorBlindMode, style
           </ul>
           <ul className="list-disc pl-5 block sm:text-base text-sm">
             <li className="mt-6 mb-2">Laget med blod og svette av <a href="https://www.twitter.com/monkeecheetah">Kristoffer J</a>.</li>
-            <li className="mt-6 mb-2">Etter en idé/ønske av <a href="https://www.twitter.com/mariayawa">Maria Yawa</a>.</li>
+            <li className="mb-2">Etter en idé av <a href="https://www.twitter.com/mariayawa">Maria Yawa</a>.</li>
           </ul>
           <h1 className="text-center sm:text-3xl text-2xl">Hvordan spille?</h1>
           <ul className="list-disc pl-5 block sm:text-base text-sm">
