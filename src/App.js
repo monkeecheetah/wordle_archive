@@ -689,7 +689,7 @@ function App() {
             </div>
           </div>
           <div className="flex items-center flex-col py-4">
-            <div className="grid grid-cols-5 grid-flow-row gap-4">
+            <div className="grid grid-cols-4 grid-flow-row gap-4">
               {board.map((row, rowNumber) =>
                 row.map((letter, colNumber) => (
                   <span
