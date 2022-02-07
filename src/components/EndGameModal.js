@@ -151,6 +151,7 @@ export const EndGameModal = ({
       style={styles}
       contentLabel="Game End Modal"
     >
+        {gameState !== state.playing && (
       <div  className={`bg-color-${backgroundColorClass} ${darkMode ? 'dark' : ''}`}>
         <div className="h-full flex flex-col items-center justify-center max-w-[300px] mx-auto text-gray-50 dark:text-primary-dark">
             <>
@@ -175,6 +176,24 @@ export const EndGameModal = ({
           <CloseButton />
         </div>
       </div>
+          )}
+        {gameState === state.playing && (
+      <div  className={`${darkMode ? 'dark' : ''}`}>
+        <div className="h-full flex flex-col items-center justify-center max-w-[300px] mx-auto text-primary dark:text-primary-dark">
+            <>
+            <p>Del denne med andre!</p>
+              <p className="mt-3 text-2xl">
+                Won: {wins}
+              </p>
+              <p className="mt-3 text-2xl">
+                Lost: {losses}
+              </p>
+            </>
+          <ShareButton />
+          <CloseButton />
+        </div>
+      </div>
+          )}          
     </Modal>
   )
 }
