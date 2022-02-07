@@ -67,7 +67,7 @@ export const EndGameModal = ({
         onClick={() => {
           setButtonPressed(true)
           navigator.clipboard.writeText(
-            `Wordle ${day} ${gameState === state.won ? currentRow: 'X'}/6\n\n` +
+            `Ruter Wordle - ${day} ${gameState === state.won ? currentRow: 'X'}/6\n\n` +
               cellStatuses
                 .map((row) => {
                   if (row.every((item) => item !== status.unguessed)) {
@@ -100,7 +100,7 @@ export const EndGameModal = ({
           )
         }}
       >
-        {buttonPressed ? 'Copied!' : 'Share'}
+        {buttonPressed ? 'Kopiert!' : 'Del'}
       </button>
     )
   }

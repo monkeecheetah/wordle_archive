@@ -2,7 +2,7 @@
 <browserconfig>
     <msapplication>
         <tile>
-            <square150x150logo src="https://devangthakkar.com/wordle-archive/mstile-150x150.png"/>
+            <square150x150logo src="https://ashy-ocean-0e2cea003.1.azurestaticapps.net/mstile-150x150.png"/>
             <TileColor>#da532c</TileColor>
         </tile>
     </msapplication>
