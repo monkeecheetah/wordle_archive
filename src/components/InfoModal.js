@@ -105,19 +105,15 @@ export const InfoModal = ({ isOpen, handleClose, darkMode, colorBlindMode, style
             </div>
           </div>
         </div>
-        <div className="flex justify-center sm:text-base text-sm">
-          <span>Dette prosjektet er åpen kildekode på:</span>
-          <a
-            className="ml-[6px] rounded-full h-5 w-5 sm:h-6 sm:w-6"
-            href="https://github.com/monkeecheetah/wordle_archive"
+        <div className="sm:text-base text-sm">
+          <p>Dette prosjektet er åpen kildekode på
+          <strong><a href="https://github.com/monkeecheetah/wordle_archive"
             target="_blank"
             rel="noreferrer"
-          >
-            <Github />
-          </a>
-          Data om rutene er hentet fra Entur sin <a href="https://developer.entur.org/stops-and-timetable-data">utviklerprotal.</a>
-          Ruter har ingen kobling mot denne applikasjonen og har ikke godkjent bruk av deres data.
-          Dataen er lisensisert under <a href="https://data.norge.no/nlod/no/">NLOD</a>.
+          > GitHub</a></strong></p>
+          <p>Data om rutene er hentet fra Entur sin <strong><a href="https://developer.entur.org/stops-and-timetable-data">utviklerprotal.</a></strong></p>
+          <p>Ruter har ingen kobling mot denne applikasjonen og har ikke godkjent bruk av deres data.</p>
+          <p>Dataen er lisensisert under <strong><a href="https://data.norge.no/nlod/no/">NLOD</a></strong>.</p>
         </div>
       </div>
     </div>

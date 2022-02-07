@@ -1,26 +1,24 @@
-# Wordle Archive
+# Ruter Wordle
 
-🔗 https://www.devangthakkar.com/wordle_archive/
+🔗 https://ashy-ocean-0e2cea003.1.azurestaticapps.net/
 
-An archive for [Wordle](https://www.powerlanguage.co.uk/wordle/) by [Josh Wardle](https://twitter.com/powerlanguish) and built on top of [Word Master](https://octokatherine.github.io/word-master/) created by [Katherine Peterson](https://twitter.com/katherinecodes), Wordle Archive is ... simply a remembrance of wordles past. I created this because I wanted to go back to Wordles that I had missed.
+En [Wordle](https://www.powerlanguage.co.uk/wordle/) klone av [Kristoffer J](https://twitter.com/monkeecheetah) basert på arbeidet til by [Josh Wardle](https://twitter.com/powerlanguish) bygget på toppen av [Wordle Archive](https://github.com/DevangThakkar/wordle_archive) som igjen er basert på [Word Master](https://octokatherine.github.io/word-master/) laget av [Katherine Peterson](https://twitter.com/katherinecodes). Rutedata er hentet fra Ruter sitt åpne API..
 
-## How did I do it?
+## Reglene
 
-This project would not have been possible without [Selenium](https://github.com/SeleniumHQ/selenium). I figured out that if I changed my computer time to a previous date, I could trick Wordle into allowing me to access the Wordle for the day. I used Selenium to go back in time and obtain answers, but I have since been told the answers were already in the correct order in the original source code. I have the answers in plain text in the source code as well because I don't care, especially since there are many ways to cheat already.
+Du har 6 gjettinger for å gjette riktig rute. Hver gjetting kan være hva som helst med de gyldige bokstavene.
 
-## Rules
+Når du har sendt inn en gjetting, vil bokstavene bli grå, gul eller blå (trikk), lilla (båt), grønn (regionbuss), rød (bybuss) eller oransje (tbane).
 
-You have 6 guesses to guess the correct word.
-Each guess can be any valid word.
 
-After submitting a guess, the letters will turn gray, green, or yellow.
 
-- Green: The letter is correct, in the correct position.
-- Yellow: The letter is correct, but in the wrong position.
-- Gray: The letter is incorrect.
+- Blå, lilla, grønn, rød, oranse: Bokstaven er riktig på riktig plassering.
+- Gul: Bokstaven er riktig, men feil plassering.
+- Grå: Bokstaven er feil.
+- OBS! Mellomrom er riktig tegn. F.eks. for 31E må du ha et mellomrom. Mellomrommene kommer først.
 
-## Contributing
+## Forbedringer
 
-Feel free to open an issue for any bugs or feature requests.
+Kom med forslag om forbedringer, bugs eller opprett en pull request!
 
-To contribute to the code, see [CONTRIBUTING.md](https://github.com/octokatherine/word-master/blob/main/CONTRIBUTING.md)
+To contribute to the code, see [CONTRIBUTING.md](https://github.com/monkeecheetah/wordle_archive/blob/main/CONTRIBUTING.md)
