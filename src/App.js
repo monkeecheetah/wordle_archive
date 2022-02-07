@@ -39,6 +39,12 @@ const getAnswerRoute = (day_) => {
   return routename;
 }
 
+
+const getAnswerColor = (day_) => {
+  let routeColor= wordle_answers[day_ - 1].route_color;
+  return routeColor;
+}
+
 const getTransportation = (day_) => {
   let todaysTransportationColor = wordle_answers[day_ - 1].route_color;
   switch (todaysTransportationColor) {
@@ -107,6 +113,7 @@ function App() {
   const initialStates = {
     answerRoute: () => getAnswerRoute(day),
     answer: () => getDayAnswer(day),
+    answerColor: () => getAnswerColor(day),
     gameState: state.playing,
     board: [
       ['', '', '', ''],
@@ -131,6 +138,7 @@ function App() {
 
   const [answer, setAnswer] = useState(initialStates.answer)
   const [answerRoute, setAnswerRoute] = useState(initialStates.answerRoute)
+  const [answerColor, setAnswerColor] = useState(initialStates.answerColor)
   const [gameState, setGameState] = useState(initialStates.gameState)
   const [gameStateList, setGameStateList] = useLocalStorage('gameStateList', Array(416).fill(initialStates.gameState))
   const [board, setBoard] = useState(initialStates.board)
@@ -405,6 +413,7 @@ function App() {
   const play = () => {
     setAnswer(initialStates.answer)
     setAnswerRoute(initialStates.answerRoute)
+    setAnswerColor(initialStates.answerColor)
     setTransportation(initialStates.transportation)
     setGameState(initialStates.gameState)
     setBoard(initialStates.board)
@@ -575,6 +584,7 @@ function App() {
             longestStreak={longestStreak}
             answer={answer}
             answerRoute={answerRoute}
+            answerColor={answerColor}
             playAgain={() => {
               closeModal()
               streakUpdated.current = false
@@ -714,6 +724,7 @@ function App() {
             longestStreak={longestStreak}
             answer={answer}
             answerRoute={answerRoute}
+            answerColor={answerColor}
             playAgain={() => {
               closeModal()
               streakUpdated.current = false

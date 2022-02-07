@@ -1,9 +1,11 @@
 import Modal from 'react-modal'
 import { useEffect, useState } from 'react'
 import { status } from '../constants'
-import Success from '../data/Success.png'
-import Fail from '../data/Cross.png'
-import WIP from '../data/WIP3.png'
+import Trikk from '../data/TramIcon.png'
+import Bat from '../data/BoatIcon.png'
+import Tbane from '../data/MetroIcon.png'
+import Buss from '../data/BussIcon.png'
+
 
 Modal.setAppElement('#root')
 
@@ -18,6 +20,7 @@ export const EndGameModal = ({
   longestStreak,
   answer,
   answerRoute,
+  answerColor,
   playAgain,
   day,
   currentRow,
@@ -28,7 +31,7 @@ export const EndGameModal = ({
       <div className={darkMode ? 'dark' : ''}>
         <button
           type="button"
-          className="rounded px-6 py-2 mt-8 text-lg nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
+          className="rounded px-6 py-2 mt-8 text-lg text-gray-50 dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
           onClick={playAgain}
         >
           Lukk
@@ -49,9 +52,46 @@ export const EndGameModal = ({
     return count
   }
 
+  function getCurrentTransportationIcon(answerColor) {
+    switch (answerColor) {
+      case '0B91EF':
+        return Trikk;
+      case '682C88':
+        return Bat;
+      case '76A300':
+        return Buss
+      case 'E60000':
+        return Buss;
+      case 'EC700C':
+        return Tbane;
+      default:
+        return '';
+    }
+  }
+
+  function getCurrentBackground(answerColor) {
+    switch (answerColor) {
+      case '0B91EF':
+        return 'trikk';
+      case '682C88':
+        return 'bat';
+      case '76A300':
+        return 'regionbuss'
+      case 'E60000':
+        return 'bybuss';
+      case 'EC700C':
+        return 'tbane';
+      default:
+        return '';
+    }
+  }
+
+  
   const gameStateList = JSON.parse(localStorage.getItem('gameStateList'))
   var wins = getOccurrence(gameStateList, 'won')
   var losses = getOccurrence(gameStateList, 'lost')
+  var CurrentImage = getCurrentTransportationIcon(answerColor);
+  var backgroundColorClass = getCurrentBackground(answerColor);
 
   const ShareButton = (props) => {
     const [buttonPressed, setButtonPressed] = useState(false)
@@ -63,7 +103,7 @@ export const EndGameModal = ({
     return (
       <button
         type="button"
-        className="rounded px-6 py-2 mt-8 text-lg nm-flat-background dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
+        className="rounded px-6 py-2 mt-8 text-lg text-gray-50 dark:nm-flat-background-dark hover:nm-inset-background dark:hover:nm-inset-background-dark text-primary dark:text-primary-dark"
         onClick={() => {
           setButtonPressed(true)
           navigator.clipboard.writeText(
@@ -111,14 +151,18 @@ export const EndGameModal = ({
       style={styles}
       contentLabel="Game End Modal"
     >
-      <div className={darkMode ? 'dark' : ''}>
-        <div className="h-full flex flex-col items-center justify-center max-w-[300px] mx-auto text-primary dark:text-primary-dark">
-          {gameState === state.won && (
+      <div  className={`bg-color-${backgroundColorClass} ${darkMode ? 'dark' : ''}`}>
+        <div className="h-full flex flex-col items-center justify-center max-w-[300px] mx-auto text-gray-50 dark:text-primary-dark">
             <>
-              <img src={Success} alt="success" height="auto" width="auto" />
-              <h1 className=" text-3xl">Hurra!</h1>
-              <p className="mt-3 text-2xl">
-                  Ruten var: <strong>{answer} - {answerRoute}</strong>
+              <img src={CurrentImage} alt="success" height="auto" width="auto" />
+              {gameState === state.won && (
+                <h1 className=" text-3xl">Hurra!</h1>
+              )}
+              {gameState === state.lost && (
+              <p>Oops!</p>            
+              )}
+              <p className="text-center mt-3 text-2xl">
+                  Ruten var:<br /> <strong>{answer} - {answerRoute}</strong>
               </p>
               <p className="mt-3 text-2xl">
                 Won: {wins}
@@ -127,37 +171,6 @@ export const EndGameModal = ({
                 Lost: {losses}
               </p>
             </>
-          )}
-          {gameState === state.lost && (
-            <>
-              <img src={Fail} alt="success" height="auto" width="80%" />
-              <div className="text-primary dark:text-primary-dark text-4xl text-center">
-                <p>Oops!</p>
-                <p className="mt-3 text-2xl">
-                  Ruten var: <br /><strong>{answer} - <br />{answerRoute}</strong>
-                </p>
-                <p className="mt-3 text-2xl">
-                  Won: {wins}
-                </p>
-                <p className="mt-3 text-2xl">
-                  Lost: {losses}
-                </p>
-              </div>
-            </>
-          )}
-          {gameState === state.playing && (
-            <>
-              <img src={WIP} alt="keep playing" height="auto" width="80%" />
-              <div className="text-primary dark:text-primary-dark text-4xl text-center">
-                <p className="mt-3 text-2xl">
-                  Won: {wins}
-                </p>
-                <p className="mt-3 text-2xl">
-                  Lost: {losses}
-                </p>
-              </div>
-            </>
-          )}
           <ShareButton />
           <CloseButton />
         </div>
